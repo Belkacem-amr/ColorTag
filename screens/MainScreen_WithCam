@@ -1,0 +1,79 @@
+import React from 'react';
+import { StyleSheet, Text, View, Button, Image,   } from 'react-native';
+import { getColor } from '../services/ColorApi';
+import style from '../assets/style';
+import { ImagePicker, Permissions } from 'expo';
+//import { getColor  } from '../ColorApi/connectApi';
+//import D from '../Screen/colorItem';
+import SafeAreaView from 'react-native-safe-area-view';
+
+ class screenHome extends React.Component {
+  
+state={
+    img: '',
+}
+
+   _displayColorForrImage  = () => {
+        this.props.navigation.navigate("Details", {img : "https://sightengine.com/assets/img/examples/example-prop-c1.jpg", palette : '' })
+    }
+
+
+    state = {
+      image: null,
+    };
+  
+    selectPicture = async () => {
+      await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+        aspect: 1,
+        allowsEditing: true,
+      });
+      if (!cancelled) this.setState({ image: uri });
+    };
+  
+    takePicture = async () => {
+      await Permissions.askAsync(Permissions.CAMERA);
+      const { cancelled, uri } = await ImagePicker.launchCameraAsync({
+        allowsEditing: false,
+      });
+      this.setState({ image: uri });
+    };
+
+    choosePhoto  = async () => {
+      ImagePicker.showImageLibrary({noData:true, mediaTypes:'Photo'}, response =>{
+        console.log("response =", response);
+
+        this.setState({
+          img: response.uri,
+        })
+      });
+    }
+
+    /*choosePhoto  = () => {
+      const options = {};
+      ImagePicker.launchImageLibrary(options, response =>{
+        console.log("response", response);
+      });
+  }*/
+    
+  render () {
+    return (
+      <SafeAreaView>
+
+      <View style={style.container}>
+
+        <Image style={style.image} source={{ uri: /*this.state.image*/  `https://sightengine.com/assets/img/examples/example-prop-c1.jpg` }} />
+
+        
+        
+          <Button color='#000000' onPress={this.selectPicture} title='Galeire'/>
+          <Button color='#000000' onPress={this.takePicture} title='Camera'/>
+        
+        <Text/><Text/>
+        <Button color='#000000' title='Lancer' onPress={() => this._displayColorForrImage()}/>
+      </View>
+      </SafeAreaView>
+    );
+  }
+}
+export default screenHome;
